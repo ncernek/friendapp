@@ -84,7 +84,6 @@ controllers.controller('FriendDetailCtrl', ['$scope', '$routeParams', '$http',
   function($scope, $routeParams, $http) {
       $http.get('friends/' + $routeParams.friendId + '.json').success(function(data) {
       $scope.friend = data;
-      $scope.friends = friends; 
     });
     // To construct the URL for the HTTP request, we use $routeParams.phoneId extracted from the current route by the $route service.
     $scope.friendId = $routeParams.friendId;
