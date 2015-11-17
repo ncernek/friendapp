@@ -1,12 +1,19 @@
 'use strict';
 
 // Declare app level module which depends on views, and components
-angular.module('myApp', [
+var friendApp = angular.module('friendApp', [
   'ngRoute',
-  'myApp.view1',
-  'myApp.view2',
-  'myApp.version'
+  'friendApp.view1',
+  'friendApp.view2',
+  'friendApp.version',
+  'controllers',
+  'filters'
 ]).
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.otherwise({redirectTo: '/view1'});
+  $routeProvider.
+      when('/friends/:friendId', {
+        templateUrl: 'friends/friend-detail.html',
+        controller: 'FriendDetailCtrl'
+      }).
+      otherwise({redirectTo: '/view1'});
 }]);

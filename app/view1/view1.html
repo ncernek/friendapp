@@ -1,1 +1,63 @@
-<p>This is the partial for view 1.</p>
+<div ng-controller="FriendListCtrl">
+    <h1>Friends</h1>
+    Search: <input ng-model="query">
+
+  <table class="table-striped">
+  <tr>
+    <th><a href="" ng-click="sortField = 'lastName'; reverse = !reverse">Name</th>
+    <th><a href="" ng-click="sortField = '-importance'; reverse = !reverse">Importance</th>
+    <th><a href="" ng-click="sortField = '-dateContacted'; reverse = !reverse">Last Date Contacted</th>
+  </tr>
+  <tr ng-repeat="friend in friends | filter:query | orderBy:sortField:reverse">
+    <td><a href="#/friends/{{friend.id}}">{{friend.firstName + " " + friend.lastName}}</a></td>
+    <td>{{friend.importance}}</td>
+    <td>{{friend.dateContacted}}</td>
+    <td>{{friend.id}}</td>
+  </tr>
+</table>
+
+  <h3>Add a friend</h3>
+  <form ng-submit="addName()">
+    <label for="date">First Name: </label>
+    <input type="text" ng-model="firstName"><br>
+    <label for="date">Last Name: </label>
+    <input type="text" ng-model="lastName"><br>
+    <label for="repeatSelect">Select Importance:</label>
+        <select name="repeatSelect" id="repeatSelect" ng-model="importance">
+          <option ng-repeat="option in availableOptions" value="{{option}}">{{option}}</option>
+        </select>
+    <br>
+
+    <label for="date">Last Contact Date: </label>
+    <input type="date" id="date" ng-model="dateContacted"><br>
+    <input type="submit" value="add">
+  </form>
+
+  <h3>Schedule Sequence</h3>
+  <button ng-click="scheduleSequence()">Create</button>
+    <table class="table-striped">
+    <tr>
+      <th>Date</th>
+      <th>Name</th>
+    </tr>
+    <tr ng-repeat="week in weeks">
+      <td>{{week}}</td>
+      <td>{{sequenceScheduler[week]}}</td>
+    </tr>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
