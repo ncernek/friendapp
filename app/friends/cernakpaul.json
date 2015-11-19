@@ -1,6 +1,6 @@
 {"firstName": "Paul",
 "lastName": "Cernak",
-"importance": 10,
+"stars": 10,
 "dateContacted": "2015.05.17",
 "id": "cernakpaul",
 "hasAccount": true}

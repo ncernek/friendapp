@@ -8,21 +8,23 @@ controllers.controller('FriendListCtrl', ['$scope', '$http', function ($scope, $
     $http.get('friends/friends.json').success(function(data) {
         $scope.friends = data;
       });
-  $scope.sortField = '-importance';
+  $scope.sortField = '-stars';
   $scope.reverse = true;
-  $scope.availableOptions = [1,2,3,4,5,6,7,8,9,10];
+  $scope.availableOptions = [1,2,3,4,5];
+  $scope.callsPerWeek = 1;
+
 
   $scope.addName = function() {
     var newFriend = {};
     newFriend.firstName = $scope.firstName;
     newFriend.lastName = $scope.lastName;
-    newFriend.importance = Number($scope.importance);
+    newFriend.stars = Number($scope.stars);
     newFriend.dateContacted = $scope.dateContacted;
     newFriend.id = $scope.lastName.concat($scope.firstName);
     $scope.friends.push(newFriend);
     $scope.firstName = '';
     $scope.lastName = '';
-    $scope.importance = '';
+    $scope.stars = '';
     $scope.dateContacted = '';
     $scope.id = '';
   };
@@ -35,27 +37,29 @@ controllers.controller('FriendListCtrl', ['$scope', '$http', function ($scope, $
 
   $scope.scheduleSequence = function() {
   	var friends = $scope.friends;
-    	var importanceTotal = importanceCounter();
-    	var sequence = arrayMaker();
+    var callsPerWeek = $scope.callsPerWeek;
+    var starsTotal = starsCounter();
+    var sequence = arrayMaker();
+    var unsortedSequence = sequenceScheduler();
 
-      function importanceCounter(){
+      function starsCounter(){
           var sum = 0;
           for (var friend in friends)
-              sum += friends[friend].importance;
-          $scope.weeks = Array.apply(null, {length: sum}).map(Number.call, Number);
+              sum += friends[friend].stars;
+          $scope.weeks = Array.apply(null, {length: sum/callsPerWeek}).map(Number.call, Number);
           return sum;
       };
 
       function arrayMaker(){
-        var sequence = Array.apply(null, Array(importanceTotal)).map(Boolean.prototype.valueOf,false);
+        var sequence = Array.apply(null, Array(starsTotal)).map(Boolean.prototype.valueOf,false);
         return sequence;
       };
 
       function sequenceScheduler() {
         	for (var friend in friends) {
               var placed = false;
-              var frequency = Math.ceil(importanceTotal / friends[friend].importance);
-              for (var i = 0; i < importanceTotal; i += frequency) {
+              var frequency = Math.ceil(starsTotal / friends[friend].stars);
+              for (var i = 0; i < starsTotal; i += frequency) {
                   placed = false;
                   if (sequence[i] == false) {
                       sequence[i] = friends[friend].id;
@@ -64,7 +68,7 @@ controllers.controller('FriendListCtrl', ['$scope', '$http', function ($scope, $
                       sequence[i - 1] = friends[friend].id;
                   }
                   else
-                      while (placed == false && i <= importanceTotal) {
+                      while (placed == false && i <= starsTotal) {
                           i++;
                           if (sequence[i] == false) {
                               sequence[i] = friends[friend].id;
@@ -75,19 +79,17 @@ controllers.controller('FriendListCtrl', ['$scope', '$http', function ($scope, $
           };
   		return sequence;
       };
-    	$scope.sequenceScheduler = sequenceScheduler();
+
+      function sortPerWeek() {
+          var sortedSequence = [];
+          var chunk = parseInt($scope.callsPerWeek);
+          for (var i=0; i < unsortedSequence.length; i += chunk) {
+              var chunkArray = unsortedSequence.slice(i,i + chunk);
+              sortedSequence.push(chunkArray);
+          };
+          return sortedSequence;
+      };
+    $scope.finalSequence = sortPerWeek();
   };
 
 }]);
-
-controllers.controller('FriendDetailCtrl', ['$scope', '$routeParams', '$http',
-  function($scope, $routeParams, $http) {
-      $http.get('friends/' + $routeParams.friendId + '.json').success(function(data) {
-      $scope.friend = data;
-    });
-    // To construct the URL for the HTTP request, we use $routeParams.phoneId extracted from the current route by the $route service.
-    $scope.friendId = $routeParams.friendId;
-    $scope.hello = function() {
-    alert('Hello ' + $scope.friend.firstName + '!');
-}
-  }]);

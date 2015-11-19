@@ -1,5 +1,24 @@
-<p>This is the partial for view 2.</p>
-<p>
-  Showing of 'interpolate' filter:
-  {{ 'Current version is v%VERSION%.' | interpolate }}
-</p>
+<div ng-controller="FriendListCtrl">
+<h3>Calendar Preferences</h3>
+<form>
+    <label for="repeatSelect">Calls per Week:</label>
+    <select name="repeatSelect" id="repeatSelect" ng-model="callsPerWeek">
+      <option ng-repeat="option in availableOptions" value="{{option}}">{{option}}</option>
+    </select>
+    <!-- <input type="submit" value="add"> -->
+</form>
+
+<h3>Schedule Sequence</h3>
+<button ng-click="scheduleSequence()">Create</button>
+callsPerWeek: {{callsPerWeek}}
+  <table class="table-striped">
+  <tr>
+    <th>Week</th>
+    <th>Names</th>
+  </tr>
+  <tr ng-repeat="week in weeks">
+    <td>{{week}}</td>
+    <td>{{finalSequence[week]}}</td>
+  </tr>
+  </table>
+</div>

@@ -7,6 +7,7 @@ var friendApp = angular.module('friendApp', [
   'friendApp.view2',
   'friendApp.version',
   'controllers',
+  'friendDetail',
   'filters'
 ]).
 config(['$routeProvider', function($routeProvider) {
@@ -17,12 +18,3 @@ config(['$routeProvider', function($routeProvider) {
       }).
       otherwise({redirectTo: '/view1'});
 }]);
-
-friendApp.factory('Data', function () {
-    return { };
-});
-
-controllers.controller('FriendListCtrl', ['$scope', '$http', function ($scope, $http) {
-    $http.get('friends/friends.json').success(function(data) {
-        $scope.friends = data;
-      });
