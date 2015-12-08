@@ -3,39 +3,39 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title ng-bind-template="FriendApp"></title>
+  <title ng-bind-template="FriendKeep"></title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
-  <link rel="stylesheet" href="app.css">
   <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
   <!-- <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
 <body>
+
   <ul class="menu">
-    <li><a href="#/view1">view1</a></li>
-    <li><a href="#/view2">view2</a></li>
+    <li><a href="#/view1">Friends</a></li>
+    <li><a href="#/view2">Schedule</a></li>
   </ul>
 
-<!-- The role of the ngView directive is to include the view template for the current route into the layout template.  -->
   <div ng-view></div>
+  <!--<ui-view></ui-view>-->
 
-  <!-- In production use:
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
-  -->
-    <!-- This code downloads the angular.js script which registers a callback that will be executed by the browser when the containing HTML page is fully downloaded. When the callback is executed, Angular looks for the ngApp directive. If Angular finds the directive, it will bootstrap the application with the root of the application DOM being the element on which the ngApp directive was defined. -->
-  <script src="bower_components/angular/angular.js"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js"></script>
+  <!-- Firebase -->
+  <script src="https://cdn.firebase.com/js/client/2.0.4/firebase.js"></script>
+  <!-- AngularFire -->
+  <script src="https://cdn.firebase.com/libs/angularfire/0.9.0/angularfire.min.js"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
+
+  <script src="services.js"></script>
   <script src="app.js"></script>
-  <script src="controllers.js"></script>
-  <script src="frienddetail.js"></script>
-  <script src="filters.js"></script>
-  <!-- <script src="bower_components/angular-resource/angular-resource.js"></script>
-  <script src="services.js"></script> -->
   <script src="view1/view1.js"></script>
   <script src="view2/view2.js"></script>
+  <script src="view1/view1ctrl.js"></script>
+  <script src="view2/view2ctrl.js"></script>
+
   <!-- I need to figure out what these scripts do -->
   <script src="components/version/version.js"></script>
   <script src="components/version/version-directive.js"></script>

@@ -1,15 +1,8 @@
-var services = angular.module('services', ['ngResource']);
+var servicesModule = angular.module('servicesModule', ['firebase']);
 
-services.factory('Friend', ['$resource',
-  function($resource){
-    return $resource('friends/:friendId.json', {}, {
-      query: {method:'GET', params:{friendId:'friends'}, isArray:true}
-    });
+servicesModule.factory('friendsService', ['$firebase',
+  function($firebase){
+    var fireRef = new Firebase('https://socialsanity.firebaseio.com/');
+      return $firebase(fireRef).$asArray();
   }]);
 
-  services.factory('f', function() {
-    var myService = {
-      someData: ''
-    };
-    return myService;
-  });

@@ -1,24 +1,45 @@
 <div ng-controller="FriendListCtrl" class="container">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-offset-2 col-md-8">
         <h1>Friends</h1>
         Search: <input ng-model="query">
 
       <table class="table-striped center">
           <tr>
-            <th><a href="" ng-click="sortField = 'lastName'; reverse = !reverse">Name</th>
-            <th><a href="" ng-click="sortField = '-stars'; reverse = !reverse">Stars</th>
-            <th><a href="" ng-click="sortField = '-dateContacted'; reverse = !reverse">Last Date Contacted</th>
+              <th><a href="" ng-click="sortField = 'firstName'; reverse = !reverse">First Name</a></th>
+            <th><a href="" ng-click="sortField = 'lastName'; reverse = !reverse">Last Name</a></th>
+            <th><a href="" ng-click="sortField = '-stars'; reverse = !reverse">Stars</a></th>
+            <th><a href="" ng-click="sortField = '-dateContacted'; reverse = !reverse">Last Date Contacted</a></th>
+              <th></th>
           </tr>
           <tr ng-repeat="friend in friends | filter:query | orderBy:sortField:reverse">
-            <td><a href="#/friends/{{friend.id}}">{{friend.firstName + " " + friend.lastName}}</a></td>
-            <td>{{friend.stars}}</td>
+            <td>
+                <div class="view" ng-if='friend !== editedFriend'>
+                    <label ng-dblclick="editFriend(friend)" >{{friend.firstName}}</label>
+                </div>
+                <form ng-submit="doneEditing(friend)" ng-if='friend == editedFriend'>
+                    <input class="edit" ng-model="friend.firstName" friend-blur="doneEditing(friend)" friend-focus="friend == editedFriend">
+                </form>
+            </td>
+              <td>
+                  <div class="view" ng-if='friend !== editedFriend'>
+                      <label ng-dblclick="editFriend(friend)" >{{friend.lastName}}</label>
+                  </div>
+                  <form ng-submit="doneEditing(friend)" ng-if='friend == editedFriend'>
+                      <input class="edit" ng-model="friend.lastName" friend-blur="doneEditing(friend)" friend-focus="friend == editedFriend">
+                  </form>
+              </td>
+            <td>
+                {{friend.stars}}
+                <a href="" ng-click="incrementStarsUp(friend)">^</a>
+                <a href="" ng-click="incrementStarsDown(friend)">v</a>
+            </td>
             <td>{{friend.dateContacted}}</td>
+              <td><button class='btn btn-xs btn-danger' ng-click="removeFriend(friend)">X</button></td>
           </tr>
       </table>
-      <br>
-      <br>
-
+            <br>
+            <br>
 
       <form ng-submit="addName()" class="well">
           <h3>Add a friend</h3>
@@ -34,32 +55,8 @@
 
         <label for="date">Last Contact Date: </label>
         <input type="date" id="date" ng-model="dateContacted"><br>
-        <input type="submit" value="add">
+        <button type="submit">Add</button>
       </form>
     </div>
-
-    <div class="col-md-6">
-      <form class="well">
-          <h3>Calendar Preferences</h3>
-          <label for="repeatSelect">Calls per Week:</label>
-          <select name="repeatSelect" id="repeatSelect" ng-model="callsPerWeek">
-            <option ng-repeat="option in availableOptions" value="{{option}}">{{option}}</option>
-          </select>
-      </form>
-
-      <h3>Schedule Sequence</h3>
-      <button ng-click="scheduleSequence()">Create</button>
-      callsPerWeek: {{callsPerWeek}}
-        <table class="table-striped">
-        <tr>
-          <th>Week</th>
-          <th>Names</th>
-        </tr>
-        <tr ng-repeat="week in weeks">
-          <td>{{week}}</td>
-          <td>{{finalSequence[week]}}</td>
-        </tr>
-        </table>
-    </div>
-
+</div>
 </div>
