@@ -1,11 +1,24 @@
 'use strict';
 
-var view2Module = angular.module('view2Module', [ 'servicesModule' ]);
+var view2Module = angular.module('view2Module', [ 'servicesModule', 'firebase' ]);
 
-view2Module.controller('ScheduleCtrl', ['$scope', '$http', 'friendsService',  function ($scope, $http, friendsService) {
-    $scope.friends = friendsService;
-    $scope.availableOptions = [1,2,3,4,5];
-    $scope.callsPerWeek = 1;
+view2Module.controller('ScheduleCtrl', ['$scope', '$http', 'firebaseService','$firebase',  function ($scope, $http, firebaseService, $firebase) {
+    var fireRef = new Firebase('https://socialsanity.firebaseio.com/');
+    var friendsRef = fireRef.child("friends");
+    var scheduleRef = fireRef.child("schedule");
+    var callsPerWeekRef = fireRef.child("callsPerWeek");
+
+
+    $scope.friendsRef = $firebase(friendsRef).$asArray();
+
+
+    //$scope.fireBaseRef = firebaseService;
+    $scope.availableOptions = [1,2,3,4,5,6,7,8,9,10];
+    $scope.callsPerWeek = 3;
+
+    function updateCallsPerWeekArray() {
+        return Array.apply(null, {length: $scope.callsPerWeek}).map(Number.call, Number);
+    }
 
     $scope.scheduleSequence = function() {
         var friends = normalizeArray();
@@ -13,11 +26,12 @@ view2Module.controller('ScheduleCtrl', ['$scope', '$http', 'friendsService',  fu
         var starsTotal = starsCounter();
         var sequence = arrayMaker();
         var unsortedSequence = sequenceScheduler();
+        var sortedSequence = sortPerWeek();
 
         function normalizeArray(){
             var regularArray = [];
-            for (var i = 0; i < $scope.friends.length; i++) {
-                regularArray.push($scope.friends[i]);
+            for (var i = 0; i < $scope.friendsRef.length; i++) {
+                regularArray.push($scope.friendsRef[i]);
             }
             return regularArray;
         }
@@ -26,16 +40,13 @@ view2Module.controller('ScheduleCtrl', ['$scope', '$http', 'friendsService',  fu
             var sum = 0;
             for (var friend in friends){
                 sum += friends[friend].stars;
-                console.log("stars: ", friends[friend]);
             }
             $scope.weeks = Array.apply(null, {length: sum/callsPerWeek}).map(Number.call, Number);
             return sum;
         }
 
         function arrayMaker(){
-            console.log("starsTotal: ", starsTotal);
             var madearray = Array.apply(null, new Array(starsTotal)).map(Boolean.prototype.valueOf,false);
-            //console.log(madearray);
             return madearray;
         }
 
@@ -73,6 +84,53 @@ view2Module.controller('ScheduleCtrl', ['$scope', '$http', 'friendsService',  fu
             }
             return sortedSequence;
         }
-        $scope.finalSequence = sortPerWeek();
+
+        //
+        function contactCardMaker() {
+            var contactCardArray = [];
+            var locale = "en-us";
+            for (var i=0; i < sortedSequence.length; i ++) {
+                var objDate = new Date(Date.now() + 604800000 * i);
+                var month = objDate.toLocaleString(locale, { month: "short" });
+                var todayString = month + " " + objDate.getDate();
+                contactCardArray.push({
+                    date: todayString,
+                    contacts: sortedSequence[i]
+                    // this dont save to db - dateObj: objDate
+                }
+                );
+            }
+            return contactCardArray;
+        }
+
+        callsPerWeekRef.set(updateCallsPerWeekArray());
+        scheduleRef.set(contactCardMaker());
     };
+
+
+    //can I put this earlier in the file?
+    $scope.scheduleRef = $firebase(scheduleRef).$asArray();
+    $scope.callsPerWeekRef = $firebase(callsPerWeekRef).$asArray();
 }]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

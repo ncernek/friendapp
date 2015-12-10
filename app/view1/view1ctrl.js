@@ -1,9 +1,13 @@
 'use strict';
 
-var view1Module = angular.module('view1Module', [ 'servicesModule' ]);
+var view1Module = angular.module('view1Module', [ 'servicesModule', 'firebase' ]);
 
-view1Module.controller('FriendListCtrl', ['$scope', '$http', 'friendsService',  function ($scope, $http, friendsService) {
-    $scope.friends = friendsService;
+view1Module.controller('FriendListCtrl', ['$scope', '$http', 'firebaseService', '$firebase',  function ($scope, $http, firebaseService, $firebase) {
+    var fireRef = new Firebase('https://socialsanity.firebaseio.com/');
+    var friendsRef = fireRef.child("friends");
+    $scope.friendsRef = $firebase(friendsRef).$asArray();
+    //$scope.fireBaseRef = firebaseService;
+
     $scope.editedFriend = null;
 
     $scope.sortField = '-stars';
@@ -13,12 +17,13 @@ view1Module.controller('FriendListCtrl', ['$scope', '$http', 'friendsService',  
 
     $scope.addName = function() {
         if(!$scope.firstName || $scope.firstName === '') { return; }
-        $scope.friends.$add({
+        var uid = $scope.lastName.concat($scope.firstName);
+        friendsRef.child(uid).set({
             firstName:$scope.firstName,
             lastName:$scope.lastName,
             stars:Number($scope.stars),
             dateContacted:$scope.dateContacted,
-            id:$scope.lastName.concat($scope.firstName)
+            id:uid
         });
         $scope.firstName = '';
         $scope.lastName = '';
@@ -31,6 +36,7 @@ view1Module.controller('FriendListCtrl', ['$scope', '$http', 'friendsService',  
 
     $scope.editFriend = function(friend){
         $scope.editedFriend = friend;
+        //I don't think this is useful.
         $scope.originalFriend = angular.extend({}, $scope.editedFriend);
     };
 
@@ -38,14 +44,14 @@ view1Module.controller('FriendListCtrl', ['$scope', '$http', 'friendsService',  
         $scope.editedFriend = null;
         var title = friend.firstName.trim();
         if (title) {
-            $scope.friends.$save(friend);
+            $scope.friendsRef.$save(friend);
         } else {
             $scope.removeFriend(friend);
         }
     };
 
     $scope.removeFriend = function(friend){
-        $scope.friends.$remove(friend);
+        $scope.friendsRef.$remove(friend);
     };
 
     $scope.incrementStarsUp = function(friend) {

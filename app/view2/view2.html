@@ -1,24 +1,23 @@
 <div ng-controller="ScheduleCtrl" class="container">
-    <div class="col-md-offset-2 col-md-8"">
-        <form class="well">
-            <h3>Calendar Preferences</h3>
+    <div class="col-md-offset-1 col-md-10">
+        <form class="text-center">
+            <h1>Schedule</h1>
+            <br>
             <label for="repeatSelect">Calls per Week:</label>
             <select name="repeatSelect" id="repeatSelect" ng-model="callsPerWeek">
                 <option ng-repeat="option in availableOptions" value="{{option}}">{{option}}</option>
             </select>
+            <button ng-click="scheduleSequence()">Create</button>
         </form>
-
-        <h3>Schedule Sequence</h3>
-        <button ng-click="scheduleSequence()">Create</button>
-        callsPerWeek: {{callsPerWeek}}
-        <table class="table-striped">
+        <br>
+        <table class="table table-striped">
             <tr>
                 <th>Week</th>
-                <th>Names</th>
+                <th ng-repeat="index in callsPerWeekRef">Contact {{index.$value + 1}}</th>
             </tr>
-            <tr ng-repeat="week in weeks">
-                <td>{{week}}</td>
-                <td>{{finalSequence[week]}}</td>
+            <tr ng-repeat="contactCard in scheduleRef">
+                <td>{{contactCard.date}}</td>
+                <td ng-repeat="contact in contactCard.contacts">{{contact}}</td>
             </tr>
         </table>
     </div>

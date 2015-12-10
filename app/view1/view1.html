@@ -1,10 +1,13 @@
 <div ng-controller="FriendListCtrl" class="container">
     <div class="row">
-        <div class="col-md-offset-2 col-md-8">
-        <h1>Friends</h1>
-        Search: <input ng-model="query">
+        <div class="col-md-offset-1 col-md-10">
+            <span class="text-center">
+              <h1>Contacts</h1>
+                Search: <input ng-model="query">
+                <br>Double-click on name to edit.
+            </span>
 
-      <table class="table-striped center">
+      <table class="table table-striped">
           <tr>
               <th><a href="" ng-click="sortField = 'firstName'; reverse = !reverse">First Name</a></th>
             <th><a href="" ng-click="sortField = 'lastName'; reverse = !reverse">Last Name</a></th>
@@ -12,7 +15,7 @@
             <th><a href="" ng-click="sortField = '-dateContacted'; reverse = !reverse">Last Date Contacted</a></th>
               <th></th>
           </tr>
-          <tr ng-repeat="friend in friends | filter:query | orderBy:sortField:reverse">
+          <tr ng-repeat="friend in friendsRef | filter:query | orderBy:sortField:reverse">
             <td>
                 <div class="view" ng-if='friend !== editedFriend'>
                     <label ng-dblclick="editFriend(friend)" >{{friend.firstName}}</label>
